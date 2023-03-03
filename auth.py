@@ -37,10 +37,8 @@ def register():
 
         if error is None:
             try:
-                db.execute(
-                    f'INSERT INTO user (username, password) VALUES '
-                    f'("{username}", "{password}")'
-                )
+                db.execute('INSERT INTO user (username, password) VALUES (?, ?)',
+           (username, password))
                 db.commit()
             except db.IntegrityError:  # catch this specific exception
                 error = f'User {username} is already registered.'

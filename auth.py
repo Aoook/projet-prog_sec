@@ -3,7 +3,8 @@
 """
 import functools
 import flask
-from flask_bcrypt import Bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 
@@ -17,7 +18,7 @@ bp = flask.Blueprint(  # declare new blueprint
     url_prefix='/auth',
 )
 
-bcrypt = Bcrypt(__name__)
+
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     """Register view. Answer a GET request with the registration form.
@@ -31,7 +32,7 @@ def register():
         password = flask.request.form['password']
         db = get_db()
         error = None
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        hashed_password = generate_password_hash(password)
         if not username:
             error = 'Username is required.'
         elif not password:
@@ -66,12 +67,13 @@ def login():
         db = get_db()
         error = None
         user = db.execute(
-            f'SELECT * FROM user WHERE username = "{username}"'
+        'SELECT * FROM user WHERE username = ?',
+        (username,)
         ).fetchone()
 
         if user is None:
             error = 'Incorrect username.'
-        elif user['password'] != password:
+        elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
         if error is None:

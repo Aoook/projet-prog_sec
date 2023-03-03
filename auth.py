@@ -2,8 +2,10 @@
 """Declare a Flask blueprint to register authentication views.
 """
 import functools
-
 import flask
+from flask_bcrypt import Bcrypt
+
+
 
 from db import get_db
 
@@ -15,7 +17,7 @@ bp = flask.Blueprint(  # declare new blueprint
     url_prefix='/auth',
 )
 
-
+bcrypt = Bcrypt(__name__)
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     """Register view. Answer a GET request with the registration form.
@@ -29,7 +31,7 @@ def register():
         password = flask.request.form['password']
         db = get_db()
         error = None
-
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         if not username:
             error = 'Username is required.'
         elif not password:
@@ -38,7 +40,7 @@ def register():
         if error is None:
             try:
                 db.execute('INSERT INTO user (username, password) VALUES (?, ?)',
-           (username, password))
+           (username, hashed_password))
                 db.commit()
             except db.IntegrityError:  # catch this specific exception
                 error = f'User {username} is already registered.'

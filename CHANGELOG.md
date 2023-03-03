@@ -10,8 +10,14 @@ All notable changes to this project will be documented in this file.
 - Added hashed passwords in auth.py
 - Added premade SQL requests
 - Added CSRF protection
+- Added XSS prevention
 
 ### Fixed
 
 - Fixed SQLi vulnerability
-- Fixed Session Cookie in not "secure" state
+- Fixed Session Cookie that were without the "secure" attribute
+- Fixed XSS vulnerability
+
+### Removed
+
+- f-strings for SQL requests removed to prevent SQLi vulnerabilities

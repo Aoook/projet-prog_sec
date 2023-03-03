@@ -9,7 +9,7 @@ import flask  # import the flask library
 import db
 import auth
 import blog
-
+from flask_wtf.csrf import CSRFProtect
 
 app_dir = pathlib.Path(__file__).resolve().parent
 
@@ -27,6 +27,6 @@ app.register_blueprint(blog.bp)  # add blog views to application
 
 app.add_url_rule('/', endpoint='index')  # map the 'index' endpoint with /
 
-
+csrf = CSRFProtect(app)
 if __name__ == '__main__':
     app.run()  # start web server

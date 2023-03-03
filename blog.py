@@ -44,7 +44,8 @@ def create():
     """
     if flask.request.method == 'POST':
         title = flask.request.form['title']
-        body = flask.request.form['body']
+        body = flask.escape(flask.request.form['body'])
+        
         error = None
 
         if not title:
@@ -85,8 +86,10 @@ def get_post(post_id, check_author=True):
     post = get_db().execute(
         'SELECT p.id, title, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
-        f' WHERE p.id = {post_id}'
+        ' WHERE p.id = ?',
+        (post_id,)
     ).fetchone()
+
 
     if post is None:
         abort(404, f"Post id {post_id} doesn't exist.")
@@ -112,7 +115,7 @@ def update(post_id):
 
     if flask.request.method == 'POST':
         title = flask.request.form['title']
-        body = flask.request.form['body']
+        body = flask.escape(flask.request.form['body'])
         error = None
 
         if not title:
@@ -123,8 +126,8 @@ def update(post_id):
         else:
             db = get_db()
             db.execute(
-                f'UPDATE post SET title = "{title}", body = "{body}"'
-                f' WHERE id = {post_id}'
+                'UPDATE post SET title = ?, body = ? WHERE id = ?',
+                (title, body, post_id)
             )
             db.commit()
             return flask.redirect(flask.url_for('blog.index'))
@@ -144,7 +147,7 @@ def delete(post_id):
     """
     get_post(post_id)
     db = get_db()
-    db.execute(f'DELETE FROM post WHERE id = {post_id}')
+    db.execute('DELETE FROM post WHERE id = ?', (post_id,))
     db.commit()
     return flask.redirect(flask.url_for('blog.index'))
 

@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Added premade SQL requests
 - Added CSRF protection
 - Added XSS prevention
+- Added secure Session Cookie
 
 ### Fixed
 

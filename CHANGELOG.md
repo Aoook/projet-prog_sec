@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added 
 
-- Added hashed passwords in auth.py
+- Added hashed passwords 
 - Added premade SQL requests
 - Added CSRF protection
 - Added XSS prevention

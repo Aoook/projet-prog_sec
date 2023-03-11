@@ -30,6 +30,7 @@ def register():
     if flask.request.method == 'POST':
         username = flask.request.form['username']
         password = flask.request.form['password']
+        
         db = get_db()
         error = None
         hashed_password = generate_password_hash(password)
@@ -64,6 +65,7 @@ def login():
     if flask.request.method == 'POST':
         username = flask.request.form['username']
         password = flask.request.form['password']
+        
         db = get_db()
         error = None
         user = db.execute(
@@ -80,7 +82,7 @@ def login():
             # generate redirect response, attach authentication cookie on it
             # and return the response objectTypeError: Expected bytes
             response = flask.redirect(flask.url_for('index'))
-            response.set_cookie('user_id', str(user['id']))
+            response.set_cookie('user_id', str(user['id']),secure=True, samesite='Lax', httponly=True)
             return response
 
         flask.flash(error, 'error')

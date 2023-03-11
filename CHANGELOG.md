@@ -11,12 +11,12 @@ All notable changes to this project will be documented in this file.
 - Added premade SQL requests
 - Added CSRF protection
 - Added XSS prevention
-- Added secure Session Cookie
+- Added securization to Cookies
 
 ### Fixed
 
 - Fixed SQLi vulnerability
-- Fixed Session Cookie that were without the "secure" attribute
+- Fixed Cookies that were vulnerable to JavaScript cookie gathering scripts and Man in the middle attacks
 - Fixed XSS vulnerability
 
 ### Removed
